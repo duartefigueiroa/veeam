@@ -1,1 +1,39 @@
+import os
+import shutil
 
+def sync_folders(source_folder, replica_folder):
+  """Synchronizes the contents of two folders.
+
+  Args:
+    source_folder: The path to the source folder.
+    replica_folder: The path to the replica folder.
+  """
+
+
+  if not os.path.exists(source_folder):
+    raise FileNotFoundError("The source folder does not exist.")
+
+  # Check if the replica folder exists.
+  if not os.path.exists(replica_folder):
+    os.mkdir(replica_folder)
+
+  # Recursively copy the contents of the source folder to the replica folder.
+  for root, dirs, files in os.walk(source_folder):
+    for directory in dirs:
+      replica_directory = os.path.join(replica_folder, directory)
+      if not os.path.exists(replica_directory):
+        os.mkdir(replica_directory)
+    for file in files:
+      source_file = os.path.join(root, file)
+      replica_file = os.path.join(replica_folder, file)
+      shutil.copyfile(source_file, replica_file)
+
+if __name__ == "__main__":
+  # Get the source and replica folder paths from the user.
+  source_folder = input("Enter the path to the source folder: ")
+  replica_folder = input("Enter the path to the replica folder: ")
+
+  # Sync the folders.
+  sync_folders(source_folder, replica_folder)
+
+  print("The folders have been synchronized.")
